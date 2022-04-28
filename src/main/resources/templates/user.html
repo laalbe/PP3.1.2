@@ -6,6 +6,13 @@
 <body>
 <h1>User, welcome spring boot security page!</h1>
 
-
+Authenticated username:
+<div sec:authentication="name">asd</div>
+Authenticated user roles:
+<div sec:authentication="principal.authorities">asd</div>
+<div sec:authorize="hasAuthority('ADMIN')">
+    <a th:href="@{/admin}">Admin panel</a>
+</div>
+<a th:href="@{/logout}">Logout</a>
 </body>
 </html>
