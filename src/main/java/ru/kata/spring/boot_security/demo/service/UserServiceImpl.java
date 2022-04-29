@@ -11,6 +11,7 @@ import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import javax.transaction.Transactional;
 import java.util.List;
 
+@Transactional
 @Service
 public class UserServiceImpl implements UserService{
 
@@ -19,44 +20,31 @@ public class UserServiceImpl implements UserService{
     @Autowired
     UserRepository userRepository;
 
-    @Transactional
     @Override
     public void addUser(User user) {
-        User userFromDB = userRepository.getUserByUsername(user.getUsername());
-        if (userFromDB != null) {
-            throw new IllegalArgumentException(String.format("User already exists in database"));
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.addUser(user);
     }
 
-    @Transactional
     @Override
     public List<User> getAllUsers() {
         return userRepository.getAllUsers();
     }
 
-    @Transactional
     @Override
     public void deleteUser(Long id) {
         userRepository.deleteUser(id);
     }
 
-    @Transactional
     @Override
     public User getUserById(Long id) {
         return userRepository.getUserById(id);
     }
 
-    @Transactional
     @Override
-    public void updateUser(User user, long id) {
-        user.setId(id);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.updateUser(user);
+    public void editUser(User user) {
+        userRepository.editUser(user);
     }
 
-    @Transactional
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.getUserByUsername(username);
@@ -65,4 +53,5 @@ public class UserServiceImpl implements UserService{
         }
         return user;
     }
+
 }

@@ -8,41 +8,50 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
-public class UserRepositoryImpl implements UserRepository{
+public class UserRepositoryImpl implements UserRepository {
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager entityManager;
 
     @Override
     public void addUser(User user) {
-        em.persist(user);
+        entityManager.persist(user);
     }
 
     @Override
-    public List<User> getAllUsers() {
-        List<User> userList = em.createQuery("select user from User user", User.class).getResultList();
-        return userList;
+    public void deleteUser(Long id) {
+
+        try {
+            User user = entityManager.find(User.class, id);
+            if (user != null) {
+                entityManager.remove(user);
+            }
+        } catch (NullPointerException e) {
+            System.out.println("This user not found");
+        }
     }
 
     @Override
-    public void deleteUser(Long id){
-        User user = em.find(User.class, id);
-        em.remove(user);
+    public void editUser(User user) {entityManager.merge(user);
     }
 
     @Override
     public User getUserById(Long id) {
-        return em.find(User.class, id);
+        return entityManager.find(User.class, id);
     }
 
     @Override
-    public void updateUser(User user) {
-        em.merge(user);
+    public List<User> getAllUsers() {
+        return entityManager
+                .createQuery("select u from User u", User.class)
+                .getResultList();
     }
 
     @Override
     public User getUserByUsername(String username) {
-        return em.createQuery("select u from User u where u.username = :username", User.class)
-                .setParameter("username", username).getSingleResult();
+        return entityManager
+                .createQuery("select u from User u where u.username = :username", User.class)
+                .setParameter("username", username)
+                .getSingleResult();
     }
 }

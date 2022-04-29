@@ -7,19 +7,10 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import ru.kata.spring.boot_security.demo.service.UserService;
+import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
-
-//создать три бд лучше через консоль и чекнуть через воркбенч
-//с паролями прикольчики непонятные прочекать
-//какие методы должны быть в сервисе
-// эд юзер, и гет бай айди
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -31,15 +22,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .cors().disable()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/","/registration").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/user").hasRole("USER")
+                .antMatchers("/", "/index").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().successHandler(successUserHandler)
@@ -48,31 +42,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .permitAll();
     }
-//anyMatchers("/admin").hasRole("ADMIN")
-// anyMatchers("/user").hasAnyRole("ADMIN","USER")
-// and() разделитель
-//formLogin() красивая сверстанная форма, где мы можем все указать, если ничего н еуказывать,
-// будет стандартная спринговая форма
-// logout() тоже можно настроить страницу логаута, куда она будет вести -->
-// logout().logoutSuccessUrl("/указываем куда вести пользователя после его разлогина")
 
-    // аутентификация inMemory change to userDetailService
-   /* @Bean
-    @Override
-    public UserDetailsService userDetailsService() {
-        UserDetails user =
-                User.withDefaultPasswordEncoder()
-                        .username("user")
-                        .password("user")
-                        .roles("USER")
-                        .build();
-
-        return new InMemoryUserDetailsManager(user);
-    }
-*/
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return NoOpPasswordEncoder.getInstance();
     }
 
     @Bean

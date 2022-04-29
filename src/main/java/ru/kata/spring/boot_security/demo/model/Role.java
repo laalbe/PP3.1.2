@@ -1,41 +1,57 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.security.core.GrantedAuthority;
-
 import javax.persistence.*;
+import java.util.Set;
 
-//@Entity
-//@Table (name = "roles")
-public enum Role implements GrantedAuthority {
-    USER, ADMIN;
+@Entity
+@Table (name = "roles")
+public class Role implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-       return name();
+       return getName();
     }
-    //@Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    //private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    //private String name;
+    private String name;
 
-    //public Long getId() {
-      //  return id;
-    //}
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
 
-   // public void setId(Long id) {
-     //   this.id = id;
-    //}
+    public Role() {
+    }
 
-    //public String getName() {
-      //  return name;
-    //}
+    public Role(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
-    //public void setName(String name) {
-     //   this.name = name;
-    //}
+    public Set<User> getUsers() {
+        return users;
+    }
 
-    //@Override
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 
 }
