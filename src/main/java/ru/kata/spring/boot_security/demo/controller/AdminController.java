@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,14 +24,15 @@ public class AdminController {
     @RequestMapping(value = "/admin")
     public String adminPage(Model model){
         model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("user", (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         return "adminPage";
     }
 
-    @GetMapping(value = "/admin/add")
-    public String addUser(Model model) {
-        model.addAttribute("user", new User());
-        return "addingPage";
-    }
+    //@GetMapping(value = "/admin/add")
+    //public String addUser(Model model) {
+      //  model.addAttribute("user", new User());
+        //return "addingPage";
+    //}
 
     @PostMapping(value = "/admin/add" )
     public String postUser(@ModelAttribute("user") User user,
@@ -47,20 +49,20 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping(value = "admin/edit/{id}")
-    public String editUser(Model model, @PathVariable("id") Long id) {
-        User user = userService.getUserById(id);
-        Set<Role> roles = user.getRoles();
-        for (Role role: roles) {
-            if (role.equals(roleService.getRoleByName("ROLE_ADMIN"))) {
-                model.addAttribute("role", true);
-            }
-        }
-        model.addAttribute("user", user);
-        return "edditingPage";
-    }
+    //@GetMapping(value = "admin/edit/{id}")
+    //public String editUser(Model model, @PathVariable("id") Long id) {
+      //  User user = userService.getUserById(id);
+        //Set<Role> roles = user.getRoles();
+        //for (Role role: roles) {
+          //  if (role.equals(roleService.getRoleByName("ROLE_ADMIN"))) {
+            //    model.addAttribute("role", true);
+            //}
+        //}
+        //model.addAttribute("user", user);
+        //return "edditingPage";
+    //}
 
-    @PostMapping(value = "admin/edit")
+    @PostMapping(value = "admin/edit/{id}")
     public String postEditUser(@ModelAttribute("user") User user,
                                @RequestParam(required=false) String role) {
 
