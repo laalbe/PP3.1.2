@@ -15,10 +15,14 @@ import java.util.Set;
 @Controller
 public class AdminController {
 
+    private final RoleService roleService;
+    private final UserService userService;
+
     @Autowired
-    RoleService roleService;
-    @Autowired
-    UserService userService;
+    public AdminController(RoleService roleService, UserService userService) {
+        this.roleService = roleService;
+        this.userService = userService;
+    }
 
     @RequestMapping(value = "/admin")
     public String adminPage(Model model){

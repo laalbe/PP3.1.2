@@ -11,10 +11,10 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 
 @Controller
 public class UserController {
-    private final UserService userService;
+    private UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public void setUserService(UserService userService) {
         this.userService = userService;
     }
 
