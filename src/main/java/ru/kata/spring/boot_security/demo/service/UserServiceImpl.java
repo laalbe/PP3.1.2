@@ -16,42 +16,42 @@ import java.util.List;
 public class UserServiceImpl implements UserService{
 
     private final PasswordEncoder passwordEncoder;
-    private final UserDao userRepository;
+    private final UserDao userDao;
 
     @Autowired
-    public UserServiceImpl(PasswordEncoder passwordEncoder, UserDao userRepository) {
+    public UserServiceImpl(PasswordEncoder passwordEncoder, UserDao userDao) {
         this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
+        this.userDao = userDao;
     }
 
     @Override
     public void addUser(User user) {
-        userRepository.addUser(user);
+        userDao.addUser(user);
     }
 
     @Override
     public List<User> getAllUsers() {
-        return userRepository.getAllUsers();
+        return userDao.getAllUsers();
     }
 
     @Override
     public void deleteUser(Long id) {
-        userRepository.deleteUser(id);
+        userDao.deleteUser(id);
     }
 
     @Override
     public User getUserById(Long id) {
-        return userRepository.getUserById(id);
+        return userDao.getUserById(id);
     }
 
     @Override
     public void editUser(User user) {
-        userRepository.editUser(user);
+        userDao.editUser(user);
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.getUserByUsername(username);
+        User user = userDao.getUserByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException(String.format("User not found"));
         }
