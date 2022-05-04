@@ -15,12 +15,10 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService{
 
-    private final PasswordEncoder passwordEncoder;
     private final UserDao userDao;
 
     @Autowired
-    public UserServiceImpl(PasswordEncoder passwordEncoder, UserDao userDao) {
-        this.passwordEncoder = passwordEncoder;
+    public UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
     }
 
