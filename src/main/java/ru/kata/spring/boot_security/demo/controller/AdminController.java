@@ -63,18 +63,20 @@ public class AdminController {
         model.addAttribute("user", user);
         return "edditingPage";
     }
-
+//здесь правила
     @PostMapping(value = "admin/edit")
     public String postEditUser(@ModelAttribute("user") User user,
-                               @RequestParam(required=false) String role) {
+                               @RequestParam(name = "roleAdmin", required=false) String role) {
 
         Set<Role> roles = new HashSet<>();
-        roles.add(roleService.getRoleByName(role));
+        //вот енто правила
+        roles.add(roleService.getDefaultRole());
         if (role != null && role.equals("ROLE_ADMIN")) {
             roles.add(roleService.getRoleByName(role));
         }
         user.setRoles(roles);
         userService.editUser(user);
+        System.out.println(role);
         return "redirect:/admin";
     }
 
