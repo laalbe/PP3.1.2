@@ -105,7 +105,7 @@ public class User implements Serializable, UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id && username.equals(user.username) && password.equals(user.password) &&
+        return id.equals(user.id) && username.equals(user.username) && password.equals(user.password) &&
                 roles.equals(user.roles);
     }
 
